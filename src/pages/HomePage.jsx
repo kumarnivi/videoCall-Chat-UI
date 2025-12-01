@@ -13,53 +13,53 @@ import { capitialize } from "../lib/utils";
 
 import FriendCard, { getLanguageFlag } from "../components/FriendCard";
 import NoFriendsFound from "../components/NoFriendsFound";
-import useAuthUser from "../hooks/useAuthUser";
+// import useAuthUser from "../hooks/useAuthUser";
 
 
 const HomePage = () => {
   const queryClient = useQueryClient();
   const [outgoingRequestsIds, setOutgoingRequestsIds] = useState(new Set());
 
-  // const { data: friends = [], isLoading: loadingFriends } = useQuery({
-  //   queryKey: ["friends"],
-  //   queryFn: getUserFriends,
-  // });
-
-  // const { data: recommendedUsers = [], isLoading: loadingUsers } = useQuery({
-  //   queryKey: ["users"],
-  //   queryFn: getRecommendedUsers,
-  // });
-
-  // const { data: outgoingFriendReqs } = useQuery({
-  //   queryKey: ["outgoingFriendReqs"],
-  //   queryFn: getOutgoingFriendReqs,
-  // });
-
-  // const { mutate: sendRequestMutation, isPending } = useMutation({
-  //   mutationFn: sendFriendRequest,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
-  // });
-
-
-  const { authUser, isLoading: loadingAuth } = useAuthUser();
-
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],
     queryFn: getUserFriends,
-    enabled: !!authUser,   // 🔥 only fetch after user authenticated
   });
 
   const { data: recommendedUsers = [], isLoading: loadingUsers } = useQuery({
     queryKey: ["users"],
     queryFn: getRecommendedUsers,
-    enabled: !!authUser,   // 🔥 only fetch after user authenticated
   });
 
   const { data: outgoingFriendReqs } = useQuery({
     queryKey: ["outgoingFriendReqs"],
     queryFn: getOutgoingFriendReqs,
-    enabled: !!authUser,   // 🔥 only fetch after user authenticated
   });
+
+  const { mutate: sendRequestMutation, isPending } = useMutation({
+    mutationFn: sendFriendRequest,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
+  });
+
+
+  // const { authUser, isLoading: loadingAuth } = useAuthUser();
+
+  // const { data: friends = [], isLoading: loadingFriends } = useQuery({
+  //   queryKey: ["friends"],
+  //   queryFn: getUserFriends,
+  //   enabled: !!authUser,   // 🔥 only fetch after user authenticated
+  // });
+
+  // const { data: recommendedUsers = [], isLoading: loadingUsers } = useQuery({
+  //   queryKey: ["users"],
+  //   queryFn: getRecommendedUsers,
+  //   enabled: !!authUser,   // 🔥 only fetch after user authenticated
+  // });
+
+  // const { data: outgoingFriendReqs } = useQuery({
+  //   queryKey: ["outgoingFriendReqs"],
+  //   queryFn: getOutgoingFriendReqs,
+  //   enabled: !!authUser,   // 🔥 only fetch after user authenticated
+  // });
 
   useEffect(() => {
     const outgoingIds = new Set();
