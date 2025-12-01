@@ -18,24 +18,45 @@ const HomePage = () => {
   const queryClient = useQueryClient();
   const [outgoingRequestsIds, setOutgoingRequestsIds] = useState(new Set());
 
+  // const { data: friends = [], isLoading: loadingFriends } = useQuery({
+  //   queryKey: ["friends"],
+  //   queryFn: getUserFriends,
+  // });
+
+  // const { data: recommendedUsers = [], isLoading: loadingUsers } = useQuery({
+  //   queryKey: ["users"],
+  //   queryFn: getRecommendedUsers,
+  // });
+
+  // const { data: outgoingFriendReqs } = useQuery({
+  //   queryKey: ["outgoingFriendReqs"],
+  //   queryFn: getOutgoingFriendReqs,
+  // });
+
+  // const { mutate: sendRequestMutation, isPending } = useMutation({
+  //   mutationFn: sendFriendRequest,
+  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
+  // });
+
+
+  const { authUser, isLoading: loadingAuth } = useAuthUser();
+
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],
     queryFn: getUserFriends,
+    enabled: !!authUser,   // 🔥 only fetch after user authenticated
   });
 
   const { data: recommendedUsers = [], isLoading: loadingUsers } = useQuery({
     queryKey: ["users"],
     queryFn: getRecommendedUsers,
+    enabled: !!authUser,   // 🔥 only fetch after user authenticated
   });
 
   const { data: outgoingFriendReqs } = useQuery({
     queryKey: ["outgoingFriendReqs"],
     queryFn: getOutgoingFriendReqs,
-  });
-
-  const { mutate: sendRequestMutation, isPending } = useMutation({
-    mutationFn: sendFriendRequest,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
+    enabled: !!authUser,   // 🔥 only fetch after user authenticated
   });
 
   useEffect(() => {
@@ -139,9 +160,8 @@ const HomePage = () => {
 
                       {/* Action button */}
                       <button
-                        className={`btn w-full mt-2 ${
-                          hasRequestBeenSent ? "btn-disabled" : "btn-primary"
-                        } `}
+                        className={`btn w-full mt-2 ${hasRequestBeenSent ? "btn-disabled" : "btn-primary"
+                          } `}
                         onClick={() => sendRequestMutation(user._id)}
                         disabled={hasRequestBeenSent || isPending}
                       >
