@@ -13,6 +13,8 @@ import { capitialize } from "../lib/utils";
 
 import FriendCard, { getLanguageFlag } from "../components/FriendCard";
 import NoFriendsFound from "../components/NoFriendsFound";
+import useAuthUser from "../hooks/useAuthUser";
+
 
 const HomePage = () => {
   const queryClient = useQueryClient();
@@ -39,7 +41,7 @@ const HomePage = () => {
   // });
 
 
-  const { authUser, isLoading: loadingAuth } = authUser();
+  const { authUser, isLoading: loadingAuth } = useAuthUser();
 
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],
