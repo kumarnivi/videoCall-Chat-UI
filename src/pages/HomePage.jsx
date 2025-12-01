@@ -39,7 +39,7 @@ const HomePage = () => {
   // });
 
 
-  const { authUser, isLoading: loadingAuth } = useAuthUser();
+  const { authUser, isLoading: loadingAuth } = authUser();
 
   const { data: friends = [], isLoading: loadingFriends } = useQuery({
     queryKey: ["friends"],
